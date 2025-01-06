@@ -1,0 +1,14 @@
+
+defaults:
+  - base_trainer
+
+_target_: aurmr_policy_models.trainers.dql_trainer.DQLTrainer
+
+# batch_size: 10
+run_name: ${env.env_name}_${model.model_name}_${now:%Y-%m-%d}_${now:%H-%M-%S}
+batch_size: 64
+epochs: 30
+learning_rate: 1e-3
+output_dir: ${data_root}/training_runs/${trainer.run_name}
+act_steps: 1
+

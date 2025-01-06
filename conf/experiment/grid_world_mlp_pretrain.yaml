@@ -1,0 +1,17 @@
+
+# @package _global_
+defaults:
+  - grid_world_defaults
+  - /model: basic_mlp
+  - /trainer: bc_trainer
+  - /dataset@train_dataset: h5_seq_dataset
+  - /dataset@val_dataset: h5_seq_dataset
+  # - /val_dataset@dataset: h5_seq_dataset
+
+trainer:
+  is_discrete: True
+
+train_dataset:
+  # hdf5_file_path: "${data_root}/collections/grid_world_grid_expert_0_100_2024-12-18_11-31-17_42.hdf5"
+  # hdf5_file_path: "${data_root}/collections/grid_world_grid_expert_0_500_2024-12-24_11-03-11_42.hdf5"
+  hdf5_file_path: "${data_root}/collections/grid_world_grid_expert_0_100000_2024-12-25_13-46-28_42.hdf5"

@@ -1,0 +1,14 @@
+
+defaults:
+  - base_trainer
+
+_target_: aurmr_policy_models.trainers.ppo_trainer.PPOTrainer
+
+# batch_size: 10
+run_name: ${env.env_name}_${model.model_name}_${now:%Y-%m-%d}_${now:%H-%M-%S}
+output_dir: ${data_root}/training_runs/${trainer.run_name}
+
+
+
+# act_steps is the number of action inputs the critic expects to process or evaluate
+act_steps: ${horizon_steps}

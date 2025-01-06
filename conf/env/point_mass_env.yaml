@@ -1,0 +1,6 @@
+defaults:
+  - /env/defaults
+_target_: aurmr_policy_models.envs.point_mass_env.PointMassEnv
+env_name: point_mass
+
+screen_size: 20

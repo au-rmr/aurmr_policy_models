@@ -1,0 +1,21 @@
+
+
+# @package _global_
+defaults:
+  - point_mass_diffusion
+  - /trainer: bc_trainer
+  - /dataset@train_dataset: h5_seq_dataset
+  # - /dataset@val_dataset: h5_seq_dataset
+  # - /val_dataset@dataset: h5_seq_dataset
+
+horizon_steps: 4
+act_steps: 4
+cond_steps: 1
+device: "cuda:0"
+
+train_dataset:
+  file_paths: ["${data_root}/collections/point_mass_expert_10000.hdf5"]
+  cond_steps: ${cond_steps}
+
+
+# model:

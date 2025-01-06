@@ -1,0 +1,8 @@
+
+
+# @package _global_
+defaults:
+  - point_mass
+  - /env: point_mass_env
+  - /model: diffusion
+  - override /agent: learned_agent

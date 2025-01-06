@@ -1,0 +1,6 @@
+
+_target_: aurmr_policy_models.models.basic_mlp.MLP
+input_dim: 4
+output_dim: 4
+hidden_dim: 1024
+model_name: "basic_mlp"

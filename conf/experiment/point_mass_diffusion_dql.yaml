@@ -1,0 +1,72 @@
+
+
+# @package _global_
+defaults:
+  - point_mass_diffusion
+  - /trainer: dql_trainer
+  - /dataset@train_dataset: h5_seq_dataset
+  - /dataset@val_dataset: h5_seq_dataset
+  - /env@train_env: point_mass_env
+  - override /model: diffusion_dql
+  # - /val_dataset@dataset: h5_seq_dataset
+
+horizon_steps: 1
+cond_steps: 1
+device: "cuda:0"
+
+
+denoising_steps: 20
+
+
+trainer:
+  num_train_iters: 81
+  num_critic_warmup_iters: 2
+  num_steps: 300
+  gamma: 0.999
+  actor_lr: 1e-4
+  actor_weight_decay: 0
+  actor_lr_scheduler:
+    first_cycle_steps: ${trainer.n_train_itr}
+    warmup_steps: 10
+    min_lr: 1e-4
+  critic_lr: 1e-3
+  critic_weight_decay: 0
+  critic_lr_scheduler:
+    first_cycle_steps: ${trainer.n_train_itr}
+    warmup_steps: 10
+    min_lr: 1e-3
+
+train_dataset:
+  file_paths: ["${data_root}/collections/point_mass_expert_10000.hdf5"]
+  cond_steps: ${cond_steps}
+
+
+# model:
+model:
+  _target_: aurmr_policy_models.models.diffusion.diffusion_dql.DQLDiffusion
+  # Sampling HPs
+  min_sampling_denoising_std: 0.1
+  randn_clip_value: 3
+  #
+  network_path: "${data_root}/pretrained_models/"
+  actor:
+    _target_: aurmr_policy_models.models.diffusion.mlp_diffusion.DiffusionMLP
+    time_dim: 16
+    mlp_dims: [512, 512, 512]
+    residual_style: True
+    cond_dim: ${eval:'${obs_dim} * ${cond_steps}'}
+    horizon_steps: ${horizon_steps}
+    action_dim: ${action_dim}
+  critic:
+    _target_: aurmr_policy_models.models.common.critic.CriticObsAct
+    action_dim: ${action_dim}
+    action_steps: ${trainer.act_steps}
+    cond_dim: ${eval:'${obs_dim} * ${cond_steps}'}
+    mlp_dims: [256, 256, 256]
+    activation_type: Mish
+    residual_style: True
+  horizon_steps: ${horizon_steps}
+  obs_dim: ${obs_dim}
+  action_dim: ${action_dim}
+  denoising_steps: ${denoising_steps}
+  device: ${device}

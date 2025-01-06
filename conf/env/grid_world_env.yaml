@@ -1,0 +1,7 @@
+defaults:
+  - /env/defaults
+_target_: aurmr_policy_models.envs.grid_world_env.GridWorldEnv
+env_name: grid_world
+
+grid_size: 5
+blocked_cells: []

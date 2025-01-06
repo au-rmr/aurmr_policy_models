@@ -1,0 +1,7 @@
+_target_: aurmr_policy_models.data.h5_seq_dataset.HDF5StitchedSequenceDataset
+
+file_paths: []
+horizon_steps: ${horizon_steps}
+cond_steps: ${cond_steps}
+max_n_episodes: 100000
+device: "cuda:0"

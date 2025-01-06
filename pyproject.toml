@@ -1,0 +1,34 @@
+[project]
+name = "aurmr_policy_models"
+version = "0.1.0"
+description = "Tools for training and evaluating robotic manipulation policy models"
+authors = [{name = "Michael Murray", email = "mmurr@uw.edu"}]
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.8"
+dependencies = [
+    "torch>=2.0.0",
+    "numpy>=1.24.0",
+    "h5py>=3.8.0",
+    "opencv-python>=4.8.0",
+    "pyyaml>=6.0",
+    "transformers>=4.12.0",
+    "diffusers>=0.30.0",
+    "gdown==5.2.0",
+    "gym==0.22.0",
+    "matplotlib==3.7.5",
+    "hydra-core==1.3.2",
+    "tensorboard==2.14.0",
+    "einops==0.8.0",
+    "wandb==0.19.1"
+]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.exclude-package-data]
+aurmr_policy_models = ["scripts/*"]

@@ -1,0 +1,36 @@
+# defaults:
+  # - /experiments/${defaults.exp}  # Set the default experiment setup
+
+defaults:
+  - _self_
+  - experiment: None
+
+# Global configurations that apply to all experiments can go here
+data_root: ${oc.env:AURMR_POLICY_MODELS_DATA_ROOT, /data/aurmr_policy_models}
+logging: info
+seed: 42
+device: "cuda:0"
+
+# horizon_steps defines how many steps into the future the actor considers when generating actions
+horizon_steps: 1
+# cond_steps refers to the number of past steps (or observations) the model conditions on when making predictions
+cond_steps: 1
+# dimensionality of observations
+obs_dim: 6
+# dimensionality of actions
+action_dim: 2
+
+train_env: false
+val_env: false
+train_dataset: false
+val_dataset: false
+
+eval:
+  max_steps: 100
+  num_episodes: 10
+
+collection:
+  collection_name: ${env.env_name}_${agent.agent_name}_${agent.version}_${collection.num_episodes}_${now:%Y-%m-%d}_${now:%H-%M-%S}_${seed}
+  max_steps: 100
+  num_episodes: 10
+  output: ${data_root}/collections

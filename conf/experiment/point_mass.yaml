@@ -1,0 +1,6 @@
+
+
+# @package _global_
+defaults:
+  - /env: point_mass_env
+  - /agent: point_mass_expert_agent

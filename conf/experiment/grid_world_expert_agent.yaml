@@ -1,0 +1,7 @@
+
+# @package _global_
+defaults:
+  - grid_world_defaults
+  - /agent: grid_world_expert_agent
+  # - env: grid_world_env
+

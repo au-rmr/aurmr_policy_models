@@ -1,0 +1,11 @@
+
+
+model: ${model}
+env: ${env}
+train_dataset: ${train_dataset}
+val_dataset: ${val_dataset}
+num_envs: 0
+
+horizon_steps: ${horizon_steps}
+seed: ${seed}
+device: ${device}

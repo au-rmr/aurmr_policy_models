@@ -1,0 +1,3 @@
+_target_: aurmr_policy_models.agents.planners.point_mass_expert_agent.PointMassExpertPlannerAgent
+agent_name: expert
+version: 0

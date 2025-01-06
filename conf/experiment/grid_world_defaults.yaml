@@ -1,0 +1,7 @@
+
+# @package _global_
+defaults:
+  # - _defaults
+  - /env: grid_world_env
+
+foo: bar

@@ -1,0 +1,3 @@
+_target_: aurmr_policy_models.agents.grid_world.grid_world_expert_agent.GridWorldExpertPlannerAgent
+agent_name: grid_expert
+version: 0
