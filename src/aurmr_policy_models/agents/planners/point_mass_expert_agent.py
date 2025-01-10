@@ -17,9 +17,9 @@ class PointMassExpertPlannerAgent(BaseAgent):
         Returns:
             action (np.array): The acceleration to apply (ax, ay).
         """
-        agent_pos = observation[:2]  # Extract agent position (x, y)
-        agent_vel = observation[2:4]  # Extract agent velocity (vx, vy)
-        goal_pos = observation[4:6]  # Extract goal position (x, y)
+        agent_pos = observation['state'][:2]  # Extract agent position (x, y)
+        agent_vel = observation['state'][2:4]  # Extract agent velocity (vx, vy)
+        goal_pos = observation['state'][4:6]  # Extract goal position (x, y)
 
         # Compute the direction vector toward the goal
         direction = goal_pos - agent_pos

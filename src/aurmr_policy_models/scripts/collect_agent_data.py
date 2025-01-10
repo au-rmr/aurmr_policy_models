@@ -28,16 +28,16 @@ def collect_data(env, agent, num_episodes, max_steps, filename, policy_version):
         f.attrs['policy_version'] = policy_version
         for episode in range(num_episodes):
             states, actions, rewards, dones = [], [], [], []
-            state = env.reset()
+            obs = env.reset()
             print(f"Starting episode {episode}")
             for step in range(max_steps):
                 if env.render_enabled:
                     env.render()
 
-                action = agent.select_action(state)[0]
+                action = agent.select_action(obs)[0]
                 next_state, reward, done, _ = env.step(action)
 
-                states.append(state.flatten())  # Assuming state can be flattened into a 1D array
+                states.append(obs['state'].flatten())  # Assuming state can be flattened into a 1D array
                 actions.append(action)  # Same assumption for action
                 rewards.append(reward)
                 dones.append(done)
