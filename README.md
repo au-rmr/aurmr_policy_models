@@ -52,7 +52,7 @@ python -m aurmr_policy_models.scripts.train_model \
 ```
 python -m aurmr_policy_models.scripts.evaluate_agent \
     experiment=point_mass_diffusion \
-    agent.model_path="/data/aurmr_policy_models/training_runs/point_mass_iter0_expert5k/" \
+    model.network_path="/data/aurmr_policy_models/training_runs/point_mass_iter0_expert5k/final_model.pt" \
     env.render=True
 ```
 
