@@ -2,6 +2,7 @@ _target_: aurmr_policy_models.models.diffusion.diffusion.DiffusionModel
 model_name: diffusion
 predict_epsilon: True
 denoised_clip_value: 1.0
+network_path: null
 network:
   _target_: aurmr_policy_models.models.diffusion.mlp_diffusion.DiffusionMLP
   time_dim: 16

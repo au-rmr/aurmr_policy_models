@@ -16,6 +16,7 @@ class MLP(nn.Module):
         self.is_discrete = False
 
     def forward(self, cond):
+        print("MLP?")
         # Extract the last state from the conditions
         # x = x[:, -1, :]  # Assumes 'state' contains the relevant state information
         return self.model(cond['state']).unsqueeze(0)

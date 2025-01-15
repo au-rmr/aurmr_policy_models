@@ -12,6 +12,7 @@ from aurmr_policy_models.trainers.base_trainer import BaseTrainer
 from aurmr_policy_models.utils.scheduler_utils import CosineAnnealingWarmupRestarts
 from aurmr_policy_models.utils.runtime_utils import Timer
 from aurmr_policy_models.utils.reward_utils import RunningRewardScaler
+from aurmr_policy_models.utils.gym_utils import render_venv_all
 
 
 # TODO: upgrade torch and use torch.unravel_index
@@ -232,12 +233,17 @@ class PPOTrainer(BaseTrainer):
                 terminated_trajs[step] = terminated_venv
                 firsts_trajs[step + 1] = done_venv
 
+                if self.save_videos:
+                    self.video_writer.render_and_write_frames()
+
                 # update for next step
                 prev_obs_venv = obs_venv
 
                 # count steps --- not acounting for done within action chunk
                 cnt_train_step += self.num_envs * self.act_steps if not eval_mode else 0
             
+            if self.save_videos and self.itr < self.num_train_iters -1:
+                self.video_writer.next_episode()
             # Summarize episode reward --- this needs to be handled differently depending on whether the environment is reset after each iteration. Only count episodes that finish within the iteration.
             episodes_start_end = []
             for env_ind in range(self.num_envs):
@@ -523,6 +529,9 @@ class PPOTrainer(BaseTrainer):
                     log.info(
                         f"eval: success rate {success_rate:8.4f} | avg episode reward {avg_episode_reward:8.4f} | avg best reward {avg_best_reward:8.4f}"
                     )
+                    print(
+                        f"eval: success rate {success_rate:8.4f} | avg episode reward {avg_episode_reward:8.4f} | avg best reward {avg_best_reward:8.4f}"
+                    )
                     if self.use_wandb:
                         wandb.log(
                             {
@@ -534,6 +543,13 @@ class PPOTrainer(BaseTrainer):
                             step=self.itr,
                             commit=False,
                         )
+                    else:
+                        print({
+                                "success rate - eval": success_rate,
+                                "avg episode reward - eval": avg_episode_reward,
+                                "avg best reward - eval": avg_best_reward,
+                                "num episode - eval": num_episode_finished,
+                            })
                     run_results[-1]["eval_success_rate"] = success_rate
                     run_results[-1]["eval_episode_reward"] = avg_episode_reward
                     run_results[-1]["eval_best_reward"] = avg_best_reward

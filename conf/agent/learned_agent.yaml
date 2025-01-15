@@ -2,8 +2,8 @@ _target_: aurmr_policy_models.agents.learned_agent.LearnedAgent
 agent_name: learned_agent
 version: 0
 
-model_path: "${data_root}/training_runs/grid_world_basic_mlp_2024-12-24_11-30-00"
 
+model: ${model}
 
 # model:
 #   _target_: aurmr_policy_models.models.basic_mlp.MLP

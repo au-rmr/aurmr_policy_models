@@ -6,3 +6,8 @@ defaults:
   - /env: point_mass_env
   - /model: diffusion
   - override /agent: learned_agent
+
+horizon_steps: 4
+act_steps: 4
+cond_steps: 1
+device: "cuda:0"

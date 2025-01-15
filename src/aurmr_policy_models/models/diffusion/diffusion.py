@@ -85,7 +85,7 @@ class DiffusionModel(nn.Module):
             #     self.load_state_dict(checkpoint["ema"], strict=False)
             #     logging.info("Loaded SL-trained policy from %s", network_path)
             # else:
-            self.load_state_dict(checkpoint, strict=False)
+            self.load_state_dict(checkpoint['model'], strict=False)
             logging.info("Loaded RL-trained policy from %s", network_path)
         logging.info(
             f"Number of network parameters: {sum(p.numel() for p in self.parameters())}"

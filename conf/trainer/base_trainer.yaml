@@ -9,3 +9,5 @@ num_envs: 0
 horizon_steps: ${horizon_steps}
 seed: ${seed}
 device: ${device}
+
+save_videos: False

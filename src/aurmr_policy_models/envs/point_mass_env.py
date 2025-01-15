@@ -1,4 +1,5 @@
 import numpy as np
+import cv2
 import gym
 from gym import spaces
 import matplotlib.pyplot as plt
@@ -10,7 +11,7 @@ class PointMassEnv(gym.Env):
     The environment can return observations as either ground truth or image representation.
     """
 
-    def __init__(self, env_name='point_mass_env', screen_size=5, obstacles=None, render=False, state_mode='ground_truth'):
+    def __init__(self, env_name='point_mass_env', screen_size=5, render_size=255, obstacles=None, render=False, state_mode='ground_truth'):
         super(PointMassEnv, self).__init__()
 
         self.env_name = env_name
@@ -59,6 +60,7 @@ class PointMassEnv(gym.Env):
         self.agent_vel = None
         self.goal_pos = None
         self.fig, self.ax = None, None  # For graphical rendering
+        self.render_size = render_size
 
     def reset(self, seed=42, options={}, return_info=False):
         """
@@ -131,7 +133,7 @@ class PointMassEnv(gym.Env):
         Returns a random position on the screen that is not an obstacle.
         """
         while True:
-            pos = np.random.uniform(0, self.screen_size, size=(2,))
+            pos = self.np_random.uniform(0, self.screen_size, size=(2,))
             if all(np.linalg.norm(pos - np.array(obs)) >= 0.5 for obs in self.obstacles):
                 return pos
 
@@ -146,7 +148,8 @@ class PointMassEnv(gym.Env):
             image[int(self.goal_pos[1]), int(self.goal_pos[0])] = [0, 255, 0]  # Green for the goal
         if int(self.agent_pos[1]) < self.screen_size and int(self.agent_pos[0]) < self.screen_size:
             image[int(self.agent_pos[1]), int(self.agent_pos[0])] = [0, 0, 255]  # Blue for the agent
-        return image
+        image_resized = cv2.resize(image, (self.render_size, self.render_size), interpolation=cv2.INTER_NEAREST)
+        return image_resized
 
     def _render_window(self):
         """

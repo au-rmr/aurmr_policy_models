@@ -1,5 +1,6 @@
 import sys
 import copy
+import logging
 from functools import wraps
 from collections import namedtuple
 
@@ -20,11 +21,19 @@ OmegaConf.register_new_resolver("eval", eval, replace=True)
 #         return func(cfg)
 #     return wrapper
 
-def load_config():
-    overrides = sys.argv[1:]  # Skip the script name in sys.argv[0]
+def load_config(overrides=None):
+    if overrides is None:
+        overrides = sys.argv[1:]  # Skip the script name in sys.argv[0]
     hydra.initialize(version_base=None, config_path='../../../conf')
     cfg = hydra.compose(config_name="config", overrides=overrides)
     print(OmegaConf.to_yaml(cfg))
+
+    # Set log level
+    numeric_level = getattr(logging, cfg.logging.upper(), None)
+    if not isinstance(numeric_level, int):
+        raise Exception(f"Invalid log level: {cfg.logging}")
+    logging.basicConfig(level=numeric_level)
+
     return cfg
 
 def load_config_from_file(filename):

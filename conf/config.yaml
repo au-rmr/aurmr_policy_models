@@ -26,8 +26,10 @@ train_dataset: false
 val_dataset: false
 
 eval:
+  evaluation_name: ${env.env_name}_${agent.agent_name}_${agent.version}_${collection.num_episodes}_${now:%Y-%m-%d}_${now:%H-%M-%S}_${seed}
   max_steps: 100
   num_episodes: 10
+  output: ${data_root}/evaluations
 
 collection:
   collection_name: ${env.env_name}_${agent.agent_name}_${agent.version}_${collection.num_episodes}_${now:%Y-%m-%d}_${now:%H-%M-%S}_${seed}

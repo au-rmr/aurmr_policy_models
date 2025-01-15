@@ -11,16 +11,21 @@ class LearnedAgent(BaseAgent):
     Extends the BaseAgent class.
     """
     
-    def __init__(self, env, agent_name, version, model_path, model_name="final_model.pt", config_name="config.yaml", device="cuda:0"):
+    def __init__(self, env, agent_name, version, model, device="cuda:0", deterministic=True):
         super().__init__(env, agent_name, version)
         self.device = device
 
-        self.config = load_config_from_file(os.path.join(model_path, config_name))
+        # self.config = load_config_from_file(os.path.join(model_path, config_name))
 
-        self.model = instantiate(self.config.model)
-        self.model.load_state_dict(torch.load(os.path.join(model_path, model_name))['model'])
+        # self.model = instantiate(self.config.model)
+        # print("learned agent model:")
+        # print(self.model)
+        self.model = model
+        # self.model.load_state_dict(torch.load(os.path.join(model_path, model_name))['model'])
         self.model.eval()  # Set model to evaluation mode
         self.model.to(self.device)
+
+        self.deterministic = deterministic
     
     def preprocess_observation(self, observation):
         """
@@ -73,7 +78,7 @@ class LearnedAgent(BaseAgent):
         
         # Get the model's output
         with torch.no_grad():
-            sample = self.model(obs_tensor)
+            sample = self.model(obs_tensor, deterministic=self.deterministic)
         
         # Postprocess the model's output to obtain the action
         return self.postprocess_action(sample)

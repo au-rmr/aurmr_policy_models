@@ -12,7 +12,13 @@ import numpy as np
 
 log = logging.getLogger(__name__)
 
-from aurmr_policy_models.utils.gym_utils import make_async_vector_env
+from aurmr_policy_models.utils.gym_utils.video_writer import AsyncVectorEnvVideoWriter
+from aurmr_policy_models.utils.gym_utils import (
+    make_async_vector_env,
+    reset_venv_all,
+    reset_venv,
+    set_venv_seeds,
+)
 
 
 class BaseTrainer(ABC):
@@ -22,8 +28,8 @@ class BaseTrainer(ABC):
     def __init__(self, model, run_name, output_dir="checkpoints", seed=42, device='cuda:0',
                  env=None, num_envs=0, reset_at_iteration=True,
                  horizon_steps=1, cond_steps=1, train_dataset=None, val_dataset=None,
-                 log_freq=1, val_freq=9999, save_model_freq=1, best_reward_threshold_for_success=-100,
-                 save_trajs=False, 
+                 log_freq=1, val_freq=1, save_model_freq=1, best_reward_threshold_for_success=-100,
+                 save_trajs=False, save_videos=False, video_fps=30,
                  use_wandb=False):
         # self.config = config
         self.model = model
@@ -60,6 +66,8 @@ class BaseTrainer(ABC):
 
         self.save_trajs = save_trajs
         self.use_wandb = use_wandb
+        self.save_videos = save_videos
+        self.video_fps = video_fps
 
         # Ensure output directory exists
         os.makedirs(output_dir, exist_ok=True)
@@ -68,6 +76,14 @@ class BaseTrainer(ABC):
         self.cfg = cfg
         if self.num_envs > 0:
             self.venv = make_async_vector_env(cfg.env, self.num_envs, True, self.cond_steps, self.horizon_steps)
+            set_venv_seeds(self.venv, cfg.seed)
+            reset_venv_all(self.venv)
+        
+        self.video_writer = None
+        if self.save_videos:
+            video_path = os.path.join(self.output_dir, "videos")
+            os.makedirs(video_path, exist_ok=True)
+            self.video_writer = AsyncVectorEnvVideoWriter(self.venv, video_path, self.video_fps)
 
     @abstractmethod
     def train(self):
@@ -101,28 +117,11 @@ class BaseTrainer(ABC):
         print(f"Final model saved: {final_model_path}")
     
     def reset_env_all(self, verbose=False, options_venv=None, **kwargs):
-        if options_venv is None:
-            options_venv = [
-                {k: v for k, v in kwargs.items()} for _ in range(self.num_envs)
-            ]
-        obs_venv = self.venv.reset_arg(options_list=options_venv)
-        # convert to OrderedDict if obs_venv is a list of dict
-        if isinstance(obs_venv, list):
-            obs_venv = {
-                key: np.stack([obs_venv[i][key] for i in range(self.num_envs)])
-                for key in obs_venv[0].keys()
-            }
-        if verbose:
-            for index in range(self.num_envs):
-                logging.info(
-                    f"<-- Reset environment {index} with options {options_venv[index]}"
-                )
+        obs_venv = reset_venv_all(self.venv, verbose=verbose, options_venv=options_venv, **kwargs)
         return obs_venv
 
     def reset_env(self, env_ind, verbose=False):
-        task = {}
-        obs = self.venv.reset_one_arg(env_ind=env_ind, options=task)
-        if verbose:
-            logging.info(f"<-- Reset environment {env_ind} with task {task}")
+        obs = reset_venv(self.venv, env_ind, verbose)
         return obs
+
 
